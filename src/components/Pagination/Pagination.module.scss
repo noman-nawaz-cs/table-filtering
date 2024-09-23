@@ -1,0 +1,14 @@
+.PaginationWrapper{
+    display: flex;
+    justify-content: space-between;
+    font-family: 'GothamBook';
+    color: #002A3A;
+}
+
+.ShowEntries{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 16px;
+}
