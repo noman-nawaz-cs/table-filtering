@@ -1,7 +1,7 @@
 import React from 'react';
 import Column from '../Column/Column';
 import Chip from '../../../Chip/Chip';
-import './Row.scss';
+import classes from './Row.module.scss'
 import { Header } from '../../../../types/DataType';
 import { getChipStyles } from '../../../../utils/styles/style';
 

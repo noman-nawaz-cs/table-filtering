@@ -1,4 +1,4 @@
-import './RangePopup.scss';
+import classes from './RangePopup.module.scss'
 import Slider from '../Slider/Slider';
 import InputField from '../InputField/InputField';
 import { useState, useEffect } from 'react';
@@ -13,109 +13,78 @@ interface RangePopupProps {
 }
 
 const RangePopup: React.FC<RangePopupProps> = ({ totalKW, onMinTotalKWUpdate, onMaxTotalKWUpdate }) => {
-    const [minValue, setMinValue] = useState<number>(totalKW.minTotalKW);
-    const [maxValue, setMaxValue] = useState<number>(totalKW.maxTotalKW);
+    const ranges = {
+        min: totalKW.minTotalKW,
+        max: totalKW.maxTotalKW,
+    };
 
-    const minRange = totalKW.minTotalKW;
-    const maxRange = totalKW.maxTotalKW;
+    const [values, setValues] = useState<{ minValue: number; maxValue: number }>({
+        minValue: ranges.min,
+        maxValue: ranges.min,
+    });
 
-    const [tempMin, setTempMin] = useState(minValue.toString());
-    const [tempMax, setTempMax] = useState(maxValue.toString());
+    const [tempValues, setTempValues] = useState<{ tempMin: string; tempMax: string }>({
+        tempMin: ranges.min.toString(),
+        tempMax: ranges.max.toString(),
+    });
 
+    
     useEffect(() => {
-        setTempMin(minValue.toString());
-        setTempMax(maxValue.toString());
-    }, [minValue, maxValue]);
+        setTempValues({ 
+            tempMin: values.minValue.toString(), 
+            tempMax: values.maxValue.toString() 
+        });
+    }, [values.minValue, values.maxValue]);
 
+    
     useEffect(() => {
         if (onMinTotalKWUpdate) {
-            onMinTotalKWUpdate(minValue);
+            onMinTotalKWUpdate(values.minValue);
         }
         if (onMaxTotalKWUpdate) {
-            onMaxTotalKWUpdate(maxValue);
+            onMaxTotalKWUpdate(values.maxValue);
         }
-        console.log("Hello world!");
-    },[minValue,maxValue]);
+    }, [values.minValue, values.maxValue]); 
 
-    const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>, field: 'min' | 'max') => {
         const value = e.target.value;
         if (/^\d*\.?\d*$/.test(value)) {
-            setTempMin(value);
+            setTempValues((prev) => ({ ...prev, [field === 'min' ? 'tempMin' : 'tempMax']: value }));
         }
     };
 
-    const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        if (/^\d*\.?\d*$/.test(value)) {
-            setTempMax(value);
-        }
-    };
-
-    const handleMinBlur = () => {
-        const value = parseFloat(tempMin);
-        if (!isNaN(value) && value >= minRange && value <= maxValue) {
-            setMinValue(value);
+    const handleBlur = (field: 'min' | 'max') => {
+        const value = parseFloat(tempValues[field === 'min' ? 'tempMin' : 'tempMax']);
+        if (field === 'min' && !isNaN(value) && value >= ranges.min && value <= values.maxValue) {
+            setValues((prev) => ({ ...prev, minValue: value }));
+        } else if (field === 'max' && !isNaN(value) && value <= ranges.max && value >= values.minValue) {
+            setValues((prev) => ({ ...prev, maxValue: value }));
         } else {
-            setTempMin(minValue.toString());
+            setTempValues((prev) => ({
+                ...prev,
+                [field === 'min' ? 'tempMin' : 'tempMax']: (field === 'min' ? values.minValue : values.maxValue).toString(),
+            }));
         }
     };
 
-    const handleMaxBlur = () => {
-        const value = parseFloat(tempMax);
-        if (!isNaN(value) && value <= maxRange && value >= minValue) {
-            setMaxValue(value);
-        } else {
-            setTempMax(maxValue.toString());
-        }
-    };
-
-    const handleMinKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>, field: 'min' | 'max') => {
         if (e.key === 'Enter') {
-            const value = parseFloat(tempMin);
-            if (!isNaN(value) && value >= minRange && value <= maxValue) {
-                setMinValue(value);
-            } else {
-                setTempMin(minValue.toString());
-            }
+            handleBlur(field);
         }
     };
-
-    const handleMaxKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            const value = parseFloat(tempMax);
-            if (!isNaN(value) && value <= maxRange && value >= minValue) {
-                setMaxValue(value);
-            } else {
-                setTempMax(maxValue.toString());
-            }
-        }
-    };
-
-    console.log(minValue, maxValue)
 
     return (
-        <div className='RangePopup'>
+        <div className={classes.RangePopup}>
             <Slider
-                minValue={minValue}
-                maxValue={maxValue}
-                setMinValue={setMinValue}
-                setMaxValue={setMaxValue}
-                min={minRange}
-                max={maxRange}
+                values={values}
+                setValues={setValues}
+                ranges={ranges}
             />
             <InputField
-                min={minValue}
-                max={maxValue}
-                minRange={minRange}
-                maxRange={maxRange}
-                tempMin={tempMin} 
-                tempMax={tempMax} 
-                handleMinChange={handleMinChange}
-                handleMaxChange={handleMaxChange}
-                handleMinBlur={handleMinBlur}
-                handleMaxBlur={handleMaxBlur}
-                handleMinKeyPress={handleMinKeyPress}
-                handleMaxKeyPress={handleMaxKeyPress}
+                tempValues={tempValues}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                handleKeyPress={handleKeyPress}
             />
         </div>
     );

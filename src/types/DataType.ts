@@ -24,4 +24,8 @@ export interface SelectedData {
     stages: string[];
     states: string[];
     projectTypes: string[];
+    totalKW: {
+        minTotalKW: number;
+        maxTotalKW: number;
+    };
 };

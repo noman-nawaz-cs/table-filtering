@@ -3,27 +3,29 @@ import MultiRangeSlider, { ChangeResult } from 'multi-range-slider-react';
 import './Slider.scss';
 
 interface SliderProps {
-    minValue: number;
-    maxValue: number;
-    setMinValue: (value: number) => void;
-    setMaxValue: (value: number) => void;
-    min: number;
-    max: number;
+    values: {
+        minValue: number;
+        maxValue: number;
+    };
+    setValues: (values: { minValue: number; maxValue: number }) => void;
+    ranges: {
+        min: number;
+        max: number;
+    };
 }
 
-const Slider: React.FC<SliderProps> = ({ minValue, maxValue, setMinValue, setMaxValue, min, max }) => {
+const Slider: React.FC<SliderProps> = ({ values, setValues, ranges }) => {
     return (
         <MultiRangeSlider
-            min={min}
-            max={max}
-            minValue={minValue}
-            maxValue={maxValue}
+            min={ranges.min}
+            max={ranges.max}
+            minValue={values.minValue}
+            maxValue={values.maxValue}
             ruler={false}
             label={false}
             baseClassName="slider"
             onInput={(e: ChangeResult) => {
-                setMinValue(e.minValue);
-                setMaxValue(e.maxValue);
+                setValues({ minValue: e.minValue, maxValue: e.maxValue });
             }}
         />
     );

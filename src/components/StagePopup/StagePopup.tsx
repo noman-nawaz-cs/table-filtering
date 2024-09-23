@@ -1,18 +1,18 @@
 import React from 'react';
 import LabelCheckbox from '../LabelCheckbox/LabelCheckbox';
 import ChipCheckbox from '../ChipCheckbox/ChipCheckbox';
-import './StagePopup.scss';
+import classes from './StagePopup.module.scss';
 import { getBackgroundColor, getTextColor } from '../../utils/styles/style';
 
 interface StagePopupProps {
     onStagesUpdate: (stages: string[]) => void;
     selectedStages: string[];
-    stagesData: string[]; // Add this prop
+    stagesData: string[]; 
 }
 
 const StagePopup: React.FC<StagePopupProps> = ({ onStagesUpdate, selectedStages, stagesData }) => {
     
-    const activeStages = ['Pre-Contract', 'In Development', 'In Construction', 'Operating'];
+    const activeStages = stagesData.filter(stage => stage !== 'Cancelled');
     const inactiveStages = ['Cancelled'];
 
     const handleCheckboxChange = (stage: string, isChecked: boolean) => {
@@ -37,7 +37,7 @@ const StagePopup: React.FC<StagePopupProps> = ({ onStagesUpdate, selectedStages,
     };
 
     return (
-        <div className="StagePopup">
+        <div className={classes.StagePopup}>
             <LabelCheckbox
                 label="Active"
                 className="active-checkbox"
@@ -57,7 +57,7 @@ const StagePopup: React.FC<StagePopupProps> = ({ onStagesUpdate, selectedStages,
             ))}
             <LabelCheckbox
                 label="Inactive"
-                className="inactive-checkbox"
+                className="withBorderTop"
                 checked={inactiveStages.some(stage => selectedStages.includes(stage))}
                 onChange={(e) => handleInactiveChange(e.target.checked)}
             />

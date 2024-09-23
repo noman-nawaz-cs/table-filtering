@@ -1,6 +1,6 @@
 import React from 'react';
 import angleDown from '../../../assets/icons/angle-down.png';
-import './Filter.scss';
+import classes from './Filter.module.scss'
 import StagePopup from '../../StagePopup/StagePopup';
 import Popup from '../../Popup/Popup';
 import RangePopup from '../../RangePopup/RangePopup';
@@ -69,10 +69,10 @@ const Filter: React.FC<FilterProps> = ({
     };
 
     return (
-        <div className="Filter" onClick={() => onToggle(title)}>
+        <div className={classes.Filter} onClick={() => onToggle(title)}>
             <div>{title}</div>
-            <div className="FilterOption">Active</div>
-            <img src={angleDown} alt="Arrow Down" className={isActive ? 'rotate' : ''} />
+            <div className={classes.FilterOption}>Active</div>
+            <img src={angleDown} alt="Arrow Down" className={`${isActive ? classes.rotate : ''}`}/>
             {isActive && (
                 <div onClick={handlePopupClick}>
                     {renderPopup()}

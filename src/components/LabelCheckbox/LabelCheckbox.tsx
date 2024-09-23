@@ -1,18 +1,19 @@
-import './LabelCheckbox.scss';
+
 import Label from '../Label/Label';
 import Checkbox from '../Checkbox/Checkbox';
 import { LabelProps } from '../Label/Label';
+import classes from './LabelCheckbox.module.scss'
 
 interface LabelCheckboxProps extends LabelProps {
     className?: string; 
     checked?: boolean;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // Add this line
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; 
 }
 
 const LabelCheckbox: React.FC<LabelCheckboxProps> = ({ label, className, checked, onChange }) => {
     return (
-        <div className={`LabelCheckbox ${className}`}>
-            <Checkbox checked={checked} onChange={onChange} /> {/* Pass onChange */}
+        <div className={`${classes.LabelCheckbox} ${className}`}>
+            <Checkbox checked={checked} onChange={onChange} /> 
             <Label label={label} />
         </div>
     );

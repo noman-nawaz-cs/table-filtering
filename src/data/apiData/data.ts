@@ -35,6 +35,7 @@ export const headers = [
         fieldName: "Offtake_Type__c",
         type: "text",
     },
+    
 ];
 
 export const data = [
@@ -93,13 +94,14 @@ export const data = [
         Offtake_Type__c: "Utility",
     },
     {
-        Name: "Wind Project 4",
-        StageName: "Operating",
-        Project_Address__StateCode__s: "Kansas",
         Total_kW: 20000,
         Project_Type__c: "Wind",
         Solution__c: "Offshore",
         Offtake_Type__c: "PPA",
+        Name: "Wind Project 4",
+        StageName: "Operating",
+        Project_Address__StateCode__s: "Kansas",
+        
     },
     {
         Name: "Hydro Plant 2",

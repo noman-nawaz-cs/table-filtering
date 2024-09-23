@@ -1,4 +1,4 @@
-// components/TableContainer/TableContainer.tsx
+
 import React from 'react';
 import FilterBar from "../FilterNavigation/FilterBar";
 import TableLayout from "../TableLayout/TableLayout";
@@ -12,36 +12,23 @@ const TableContainer: React.FC = () => {
         selectedData,
         filteredData,
         activeFilter,
-        stagesData,
-        statesData,
-        projectTypesData,
-        minTotalKW,
-        maxTotalKW,
-        handleStagesUpdate,
-        handleStatesUpdate,
-        handleProjectTypeUpdate,
-        handleMinTotalKWUpdate,
-        handleMaxTotalKWUpdate,
+        filterBarData,
+        handleUpdate,
         handleFilterChange,
     } = useFilter(data);
 
     const dataRow = convertDataToDataRow(filteredData);
+    console.log(filteredData);
+    console.log(selectedData)
 
     return (
         <>
             <FilterBar 
                 selectedData={selectedData}
-                onStagesUpdate={handleStagesUpdate}
-                onStatesUpdate={handleStatesUpdate}
-                onProjectTypesUpdate={handleProjectTypeUpdate}
-                onMinTotalKWUpdate={handleMinTotalKWUpdate}
-                onMaxTotalKWUpdate={handleMaxTotalKWUpdate}
+                handleUpdate={handleUpdate}
                 activeFilter={activeFilter}
                 onFilterChange={handleFilterChange}
-                stagesData={stagesData}
-                statesData={statesData}
-                projectTypesData={projectTypesData}
-                totalKW={{ minTotalKW, maxTotalKW }} // Passing the totalKW as an object
+                filterBarData={filterBarData}
             />
             <TableLayout data={dataRow} headers={headers} />
         </>

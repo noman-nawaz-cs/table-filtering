@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Data } from '../../types/DataType';
 
-interface FilteredData {
+export interface FilteredData {
     stages: string[];
     states: string[];
     projectTypes: string[];
@@ -18,68 +18,60 @@ const useFilter = (data: Data[]) => {
         projectTypes: [],
         totalKW: {
             minTotalKW: 0,
-            maxTotalKW: Infinity, // Use Infinity for upper limit
+            maxTotalKW: 0, 
         },
     });
 
-    const [filteredData, setFilteredData] = useState<Data[]>(data);
+    const [filteredData, setFilteredData] = useState<Data[]>([]);
     const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
-    const stagesData = useMemo(() => Array.from(new Set(data.map(item => item.StageName))), [data]);
-    const statesData = useMemo(() => Array.from(new Set(data.map(item => item.Project_Address__StateCode__s))), [data]);
-    const projectTypesData = useMemo(() => Array.from(new Set(data.map(item => item.Project_Type__c))), [data]);
-    
-    const minTotalKW = useMemo(() => Math.min(...data.map(item => item.Total_kW)), [data]);
-    const maxTotalKW = useMemo(() => Math.max(...data.map(item => item.Total_kW)), [data]);
+
+    const filterBarData = useMemo(() => {
+        return {
+            stagesData: Array.from(new Set(data.map(item => item.StageName))),
+            statesData: Array.from(new Set(data.map(item => item.Project_Address__StateCode__s))),
+            projectTypesData: Array.from(new Set(data.map(item => item.Project_Type__c))),
+            totalKW: {
+                minTotalKW: Math.min(...data.map(item => item.Total_kW)),
+                maxTotalKW: Math.max(...data.map(item => item.Total_kW)),
+            },
+        };
+    }, [data]);
 
     useEffect(() => {
         filterData();
-    }, [selectedData]); // Re-run filtering whenever selectedData changes
+    }, [selectedData]);
 
     const filterData = () => {
         const { stages, states, projectTypes, totalKW } = selectedData;
 
         const filtered = data.filter((item: Data) => 
-            (stages.length === 0 || stages.includes(item.StageName)) &&
-            (states.length === 0 || states.includes(item.Project_Address__StateCode__s)) &&
-            (projectTypes.length === 0 || projectTypes.includes(item.Project_Type__c)) &&
+            ( stages.includes(item.StageName)) &&
+            ( states.includes(item.Project_Address__StateCode__s)) &&
+            ( projectTypes.includes(item.Project_Type__c)) &&
             (item.Total_kW >= totalKW.minTotalKW && item.Total_kW <= totalKW.maxTotalKW)
         );
 
         setFilteredData(filtered);
     };
 
-    const handleStagesUpdate = (stages: string[]) => {
-        setSelectedData(prev => ({ ...prev, stages }));
+    const handleUpdate = (key: keyof FilteredData, value: any) => {
+        setSelectedData(prev => {
+            if (key === 'totalKW') {
+                return {
+                    ...prev,
+                    totalKW: { ...prev.totalKW, ...value },
+                };
+            }
+    
+            return {
+                ...prev,
+                [key]: value,
+            };
+        });
     };
-
-    const handleStatesUpdate = (states: string[]) => {
-        setSelectedData(prev => ({ ...prev, states }));
-    };
-
-    const handleProjectTypeUpdate = (projects: string[]) => {
-        setSelectedData(prev => ({ ...prev, projectTypes: projects }));
-    };
-
-    const handleMinTotalKWUpdate = (minTotalKW: number) => {
-        setSelectedData(prev => ({
-            ...prev,
-            totalKW: {
-                ...prev.totalKW,
-                minTotalKW,
-            },
-        }));
-    };
-
-    const handleMaxTotalKWUpdate = (maxTotalKW: number) => {
-        setSelectedData(prev => ({
-            ...prev,
-            totalKW: {
-                ...prev.totalKW,
-                maxTotalKW,
-            },
-        }));
-    };
+    
+    
 
     const handleFilterChange = (filter: string | null) => {
         setActiveFilter(filter);
@@ -89,16 +81,8 @@ const useFilter = (data: Data[]) => {
         selectedData,
         filteredData,
         activeFilter,
-        stagesData,
-        statesData,
-        projectTypesData,
-        minTotalKW,
-        maxTotalKW,
-        handleStagesUpdate,
-        handleStatesUpdate,
-        handleProjectTypeUpdate,
-        handleMinTotalKWUpdate,
-        handleMaxTotalKWUpdate,
+        filterBarData,
+        handleUpdate,
         handleFilterChange,
     };
 };

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import Row from './Row/Row';
-import './Table.scss';
+import classes from './Table.module.scss'
 import TableHeading from './TableHeading/TableHeading';
 import { DataRow, Header } from '../../../types/DataType';
 
@@ -23,8 +23,8 @@ const Table: React.FC<TableProps> = ({ data, headers }) => {
     };
 
     return (
-        <div className="table-container">
-            <table className="responsive-table">
+        <div className={classes.tableContainer}>
+            <table className={classes.responsiveTable}>
                 <thead>
                     <tr>
                         {headers.map((header) => (

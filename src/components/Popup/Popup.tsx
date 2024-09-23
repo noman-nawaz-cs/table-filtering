@@ -1,6 +1,6 @@
 import React from 'react';
 import LabelCheckbox from '../LabelCheckbox/LabelCheckbox';
-import './Popup.scss';
+import classes from './Popup.module.scss'
 
 interface PopupProps {
     label: string;
@@ -49,7 +49,7 @@ const Popup: React.FC<PopupProps> = ({
     };
 
     return (
-        <div className='Popup'>
+        <div className={classes.Popup}>
             {label === 'State' && statesData && (
                 <>
                     <LabelCheckbox
